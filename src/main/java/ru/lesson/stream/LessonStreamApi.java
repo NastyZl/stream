@@ -2,17 +2,15 @@ package ru.lesson.stream;
 
 import ru.lesson.stream.dto.Employee;
 import ru.lesson.stream.dto.PositionType;
-
-import static java.util.Comparator.comparingInt;
-
-import java.util.HashSet;
-import java.util.List;
 import static java.util.stream.Collectors.*;
-
-
+import static java.util.Comparator.comparingInt;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.List;
+
+
+
 
 public class LessonStreamApi {
 
@@ -85,7 +83,7 @@ public class LessonStreamApi {
             throw new IllegalArgumentException(Integer.toString(number));
         }
         return employees.stream()
-                .skip((number-1)*size)
+                .skip((long) (number - 1) *size)
                 .limit(size)
                 .collect(toList());
     }
@@ -125,7 +123,7 @@ public class LessonStreamApi {
     public Map<PositionType, Double> task8(List<Employee> employees) {
         return employees.stream().collect(
                 groupingBy(Employee::getPositionType,
-                        Collectors.averagingDouble(Employee::getRating)));
+                        averagingDouble(Employee::getRating)));
     }
 
     /**
@@ -137,8 +135,8 @@ public class LessonStreamApi {
      */
     public Map<Boolean, Long> task9(List<Employee> employees) {
         return employees.stream()
-                .collect(Collectors.partitioningBy(employee -> employee.getRating() > 50,
-                Collectors.counting()));
+                .collect(partitioningBy(employee -> employee.getRating() > 50,
+                counting()));
     }
 
     /**
@@ -149,7 +147,8 @@ public class LessonStreamApi {
      * Сотрудник является эффективным, если его рейтинг больше 50.
      */
     public Map<Boolean, String> task10(List<Employee> employees) {
-       return null;//employees.stream();
+       return employees.stream()
+               .collect(partitioningBy(employee -> employee.getRating() > 50,
+                       mapping(Employee::getName, joining(", "))));
     }
-
 }
